@@ -1,76 +1,44 @@
-package com.tui.gitmanager.service;
+package com.tui.gitmanager.unit.services;
 
-import com.bvgroup.exchangerates.exceptions.CustomRateException;
-import com.bvgroup.exchangerates.models.Rate;
-import com.bvgroup.exchangerates.repositories.RateRepository;
-import com.bvgroup.exchangerates.service.ExternalRatesService;
-import com.bvgroup.exchangerates.service.RatesService;
-import com.bvgroup.exchangerates.util.ExchangeRateConverter;
+import com.tui.gitmanager.model.GitRepository;
+import com.tui.gitmanager.services.GitService;
+import com.tui.gitmanager.services.GithubAPIService;
+import com.tui.gitmanager.utils.DataMock;
 import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.runners.MethodSorters;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
+import java.util.List;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
 @SpringBootTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class RatesServiceTest {
+class GitServiceTest {
 
     @Autowired
-    private RateRepository rateRepository;
-
-    @Autowired
-    private RatesService ratesService;
-
-    private final ExternalRatesService externalRatesServiceMock = Mockito.mock(ExternalRatesService.class);
+    private GithubAPIService githubAPIService;
 
     @Test
-    public void exchangeRateIsSaved() throws Exception, CustomRateException {
-        final String from = "EUR";
-        final String to = "GBP";
+    public void getRepositories() throws Exception {
+        final String username = "prtpereira";
+        final Pageable page = PageRequest.of(1, 3);
 
-        BigDecimal exchangeRate = ratesService.getExchangeRate(from, to);
-        Rate EurGbpRate = rateRepository.findByFromCurrencyAndToCurrency(from, to);
+        final List<GitRepository> expectedRepositories = DataMock.getMockedRepositoriesPrtpereira();
 
-        Assertions.assertEquals(exchangeRate, ExchangeRateConverter.decode(EurGbpRate.getExchangeRate()));
+        Page<GitRepository> pageableRepositories = githubAPIService.getRepositories(username, page);
+
+        Assertions.assertEquals(1, pageableRepositories.getNumber());
+        Assertions.assertEquals(3, pageableRepositories.getSize());
+        Assertions.assertEquals(expectedRepositories, pageableRepositories.getContent());
     }
 
-    @Test
-    public void exchangeRateIsNotUpdatedBefore60Secs() throws Exception, CustomRateException {
-        final String from = "GBP";
-        final String to = "EUR";
-
-        ratesService.getExchangeRate(from, to);
-
-        Mockito.verify(externalRatesServiceMock, Mockito.times(0)).getExchangeRate(Mockito.any(), Mockito.any());
-    }
-
-    @Test
-    public void getExchangeRates() throws Exception, CustomRateException {
-        final String from = "USD";
-        HashMap<String, BigDecimal> exchangeRates = ratesService.getExchangeRates(from);
-
-        Assertions.assertFalse(exchangeRates.isEmpty());
-    }
-
-    @Test
-    public void convertAmountReturns() throws Exception, CustomRateException {
-        final String from = "EUR";
-        final String to = "USD";
-        final BigDecimal amount = BigDecimal.valueOf(150);
-
-        BigDecimal exchangeRate = ratesService.getExchangeRate(from, to);
-        BigDecimal convertedAmount = ratesService.convertAmount(from, to, amount);
-
-        Assertions.assertEquals(convertedAmount, amount.multiply(exchangeRate));
-    }
 }

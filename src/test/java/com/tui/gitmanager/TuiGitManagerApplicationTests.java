@@ -1,10 +1,10 @@
-package com.bvgroup.exchangerates;
+package com.tui.gitmanager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ExchangeRatesApiApplicationTests {
+class TuiGitManagerApplicationTests {
 
     @Test
     void contextLoads() {

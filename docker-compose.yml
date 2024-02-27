@@ -14,4 +14,4 @@ services:
     environment:
       - API_GITHUB_USERS_ENDPOINT=https://api.github.com/users/
       - API_GITHUB_REPOS_ENDPOINT=https://api.github.com/repos/
-      - GITHUB_TOKEN=Bearer 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
+      - GITHUB_TOKEN=

@@ -1,29 +1,34 @@
-package com.tui.gitmanager.model;
+package com.tui.gitmanager.representers;
 
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tui.gitmanager.model.GitRepository;
+import org.springframework.data.domain.Page;
 
-public class GitRepository {
-    private String name;
-    private Map<String, String> branches;
+public class RepositoriesOutputRepresenter {
 
-    public GitRepository(String name, Map<String, String> branches) {
-        this.name = name;
-        this.branches = branches;
+    private Page<GitRepository> repositories;
+    @JsonProperty(value = "owner_login")
+    private String ownerLogin;
+
+    public RepositoriesOutputRepresenter(String ownerLogin, Page<GitRepository> repositories) {
+        this.ownerLogin = ownerLogin;
+        this.repositories = repositories;
     }
 
-    public String getName() {
-        return name;
+    public String getOwnerLogin() {
+        return ownerLogin;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setOwnerLogin(String ownerLogin) {
+        this.ownerLogin = ownerLogin;
     }
 
-    public Map<String, String> getBranches() {
-        return branches;
+    public Page<GitRepository> getRepositories() {
+        return repositories;
     }
 
-    public void setBranches(Map<String, String> branches) {
-        this.branches = branches;
+    public void setRepositories(Page<GitRepository> repositories) {
+        this.repositories = repositories;
     }
+
 }

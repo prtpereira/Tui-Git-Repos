@@ -1,9 +1,9 @@
-package com.bvgroup.exchangerates.exceptions;
+package com.tui.gitmanager.exceptions;
 
-public class CustomRateException extends Exception{
+public class UsernameNotFoundException extends Exception{
     private String type;
 
-    public CustomRateException(String type, String message) {
+    public UsernameNotFoundException(String type, String message) {
         super(message);
         this.type = type;
     }

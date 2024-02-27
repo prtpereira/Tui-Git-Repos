@@ -1,19 +1,10 @@
 package com.tui.gitmanager.services;
 
-import com.tui.gitmanager.model.Quote;
+import com.tui.gitmanager.model.GitRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
+public interface GitService {
 
-
-public interface QuotesService {
-
-    public Optional<Quote> getQuoteByExternalId(String externalId);
-
-    public Page<Quote> getQuotesByAuthor(String author, Pageable page) throws Exception;
-
-    public Page<Quote> getQuotes(Pageable page);
-
-    public Quote saveQuote(Quote quote);
+    public Page<GitRepository> getGithubRepositories(String username, Pageable page) throws Exception;
 }

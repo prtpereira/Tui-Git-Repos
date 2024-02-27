@@ -1,81 +1,40 @@
 package com.tui.gitmanager.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.Map;
 
-@Document("quotes")
-public class Quote {
-    @Id @JsonIgnore
-    private String id;
-    @JsonProperty("_id") @Indexed(unique = true)
-    private String externalId;
-    private String text;
-    private String author;
-    private String genre;
-    @JsonProperty("__v")
-    private int version;
+public class GitRepository {
+    private String name;
+    private Map<String, String> branches;
 
-    public Quote() {
-        super();
+    public GitRepository(String name, Map<String, String> branches) {
+        this.name = name;
+        this.branches = branches;
     }
 
-    public Quote(String id, String externalId, String text, String author, String genre, int version) {
-        this.id = id;
-        this.externalId = externalId;
-        this.text = text;
-        this.author = author;
-        this.genre = genre;
-        this.version = version;
+    public String getName() {
+        return name;
     }
 
-    public String getId() {
-        return id;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public Map<String, String> getBranches() {
+        return branches;
     }
 
-    public String getExternalId() {
-        return externalId;
+    public void setBranches(Map<String, String> branches) {
+        this.branches = branches;
     }
 
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
-    }
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof GitRepository))
+            return false;
+        GitRepository other = (GitRepository)o;
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
+        return this.name.equals(other.name) && this.branches.equals(other.branches);
     }
 }

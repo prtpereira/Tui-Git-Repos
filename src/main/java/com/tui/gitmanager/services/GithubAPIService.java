@@ -1,11 +1,10 @@
 package com.tui.gitmanager.services;
 
-import com.tui.gitmanager.model.Quote;
-
+import com.tui.gitmanager.model.GitRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface QuoteGardenAPIService {
+public interface GithubAPIService {
 
-    public Page<Quote> getQuotesByAuthor(String author, Pageable page) throws Exception;
+    public Page<GitRepository> getRepositories(String username, Pageable page) throws Exception;
 }

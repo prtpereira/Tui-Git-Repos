@@ -21,7 +21,7 @@ Resources:
    Integration:
     IntegrationHttpMethod: ANY
     Type: HTTP_PROXY
-    Uri: http://your-fargate-service-url:8080/{proxy}
+    Uri: http://your-fargate-service-url:8080/{proxy} //EDIT
     IntegrationResponses:
      - StatusCode: 200
        ResponseParameters:

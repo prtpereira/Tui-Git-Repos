@@ -1,30 +1,91 @@
-Resources:
- MyCluster:
-  Type: AWS::ECS::Cluster
+swagger: '2.0'
+info:
+ version: 1.0.0
+ title: TUI Github Repo API
+ description: The API consists of being able to list all github repositories of a given username, wich are not forks. Information about the branch name and the last commit sha is also present.
 
- MyTaskDefinition:
-  Type: AWS::ECS::TaskDefinition
-  Properties:
-   Family: my-task
-   Cpu: 256
-   Memory: 512
-   NetworkMode: awsvpc
-   ContainerDefinitions:
-    - Name: my-container
-      Image: //docker image url
-      PortMappings:
-       - ContainerPort: 8080
 
- MyService:
-  Type: AWS::ECS::Service
-  Properties:
-   Cluster: !Ref MyCluster
-   DesiredCount: 1
-   TaskDefinition: !Ref MyTaskDefinition
-   LaunchType: FARGATE
-   NetworkConfiguration:
-    AwsvpcConfiguration:
-     Subnets:
-      - //ID of subnet
-     SecurityGroups:
-      - //ID of security group
+consumes:
+ - application/json
+produces:
+ - application/json
+paths:
+ /api/users/{username}/repos:
+  get:
+   tags:
+    - Repositories
+   parameters:
+    - name: "username"
+      in: "path"
+      required: true
+      type: "string"
+      description: Github username
+   description: List user repositories
+   operationId: register
+   responses:
+    200:
+     description: List of repositories is successfully returned
+     schema:
+      example:
+       owner_login: prtpereira
+       repositories:
+        content:
+         - name: Project
+           branches:
+            test: b1bcfa93a596b75e109f3c41201998f582b51cab
+            master: b1bcfa93a596b75e109f3c41201998f582b51cab
+         - name: BigTwo
+           branches:
+            master: 2f545527abeb2c07c15c194d8c8f8c73e4b1a018
+         - name: Concurrent-Game
+           branches:
+            master: 34ef7e69112ee9a0a9be643d89b0ab0bebd19873
+        pageable:
+         pageNumber: 1
+         pageSize: 3
+        totalPages: 2
+        totalElements: 6
+        size: 3
+        number: 1
+    404:
+     description: Not found error
+     schema:
+      $href: '#/definitions/error'
+      example:
+       status: 404
+       message: Username 'username' does not exist on Github services.
+
+    406:
+     description: Not Acceptable Error
+     schema:
+      $href: '#/definitions/error'
+      example:
+       status: 406
+       message: The server is unable to deliver data in the format requested
+
+    500:
+     description: Internal server error.
+     schema:
+      $href: '#/definitions/error'
+      example:
+       status: 500
+       message: An expected error occured while trying to fetch the user information.
+
+
+
+definitions:
+
+ error:
+  type: object
+  properties:
+   error:
+    status: int
+   error_message:
+    message: string
+
+
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /PRTPEREIRA2/tui-git-repos/1.0.0
+schemes:
+ - https

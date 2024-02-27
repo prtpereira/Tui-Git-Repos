@@ -11,7 +11,7 @@ Resources:
    NetworkMode: awsvpc
    ContainerDefinitions:
     - Name: my-container
-      Image: your-docker-image-url
+      Image: //docker image url
       PortMappings:
        - ContainerPort: 8080
 
@@ -25,6 +25,6 @@ Resources:
    NetworkConfiguration:
     AwsvpcConfiguration:
      Subnets:
-      - subnet-id
+      - //ID of subnet
      SecurityGroups:
-      - security-group-id
+      - //ID of security group

@@ -1,0 +1,34 @@
+Resources:
+ MyApiGateway:
+  Type: AWS::ApiGateway::RestApi
+  Properties:
+   Name: my-api
+
+ MyApiGatewayResource:
+  Type: AWS::ApiGateway::Resource
+  Properties:
+   RestApiId: !Ref MyApiGateway
+   ParentId: !GetAtt MyApiGateway.RootResourceId
+   PathPart: "{proxy+}"
+
+ MyApiGatewayMethod:
+  Type: AWS::ApiGateway::Method
+  Properties:
+   HttpMethod: ANY
+   ResourceId: !Ref MyApiGatewayResource
+   RestApiId: !Ref MyApiGateway
+   AuthorizationType: NONE
+   Integration:
+    IntegrationHttpMethod: ANY
+    Type: HTTP_PROXY
+    Uri: http://your-fargate-service-url:8080/{proxy}
+    IntegrationResponses:
+     - StatusCode: 200
+       ResponseParameters:
+        method.response.header.Access-Control-Allow-Origin: "'*'"
+       ResponseTemplates:
+        application/json: ""
+   MethodResponses:
+    - StatusCode: 200
+      ResponseParameters:
+       method.response.header.Access-Control-Allow-Origin: true
